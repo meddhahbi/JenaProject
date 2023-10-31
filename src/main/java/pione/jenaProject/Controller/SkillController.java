@@ -21,17 +21,29 @@ import java.util.Map;
 public class SkillController {
     @GetMapping
     public ResponseEntity<Object> performQuery() {
-        String queryString = " PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n" +
-                " SELECT ?skill ?skillName ?skillDescription\n" +
-                "WHERE {\n" +
-                "   ?Skill a :skill .\n" +
-                "   ?Skill :skillId ?skillId .\n" +
-                "  ?Skill :skillName ?skillName .\n" +
-                "  ?Skill :skillDescription ?skillDescription .\n" +
-                "    ?Skill :rate ?user_id .\n" +
-                "    ?user_id a :User .\n" +
-                "    ?user_id :username ?username .\n" +
-                "}";
+        String queryString =
+//                " PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n" +
+//                " SELECT ?skills ?skillName ?skillDescription\n" +
+//                "WHERE {\n" +
+//                "   ?Skills a :skills .\n" +
+//                "   ?Skills :skillId ?skillId .\n" +
+//                "  ?Skills :skillName ?skillName .\n" +
+//                "  ?Skills :skillDescription ?skillDescription .\n" +
+////                "    ?Skills :rate ?user_id .\n" +
+////                "    ?user_id a :User .\n" +
+////                "    ?user_id :username ?username .\n" +
+//                "}";
+        "PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n"+
+        "SELECT ?skill ?skillId ?skillName ?username\n"+
+        "WHERE { \n"+
+                "?skill a :Skills .\n"+
+                    "?skill :skillId ?skillId .\n"+
+                    "?skill :skillName ?skillName .\n"+
+                "?skill :maitriser ?user_id .\n" +
+                " ?user_id a :User .\n" +
+                " ?user_id :username ?username"+
+//            ";\n"+
+        "}";
 
 
         String serviceEndpoint = "http://localhost:3030/ds/sparql";
@@ -49,16 +61,17 @@ public class SkillController {
                 QuerySolution solution = results.next();
                 RDFNode skill = solution.get("skill");
                 RDFNode skillId = solution.get("skillId");
-                RDFNode skillDescription = solution.get("skillDescription");
                 RDFNode skillName = solution.get("skillName");
+                RDFNode username = solution.get("username");
+                System.out.println(username.toString());
 
 
 
                 Map<String, Object> resultItem = new HashMap<>();
                 resultItem.put("skill", skill.toString());
                 resultItem.put("skillId", skillId.toString());
-                resultItem.put("skillDescription", skillDescription.toString());
                 resultItem.put("skillName", skillName.toString());
+                resultItem.put("username", username.toString());
                 queryResults.add(resultItem);
             }
 

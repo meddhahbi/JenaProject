@@ -22,16 +22,15 @@ public class OffreController {
     @GetMapping
     public ResponseEntity<Object> performQuery() {
         String queryString = " PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n" +
-                " SELECT ?offre ?offreTitle ?offreDescription\n" +
+                " SELECT ?Offre ?offreId ?offreTitle ?offreDescription ?username ?firstName\n" +
                 "WHERE {\n" +
-                "   ?Offre a :offre .\n" +
+                "   ?Offre a :Offre .\n" +
                 "   ?Offre :offreId ?offreId .\n" +
                 "  ?Offre :offreTitle ?offreTitle .\n" +
                 "  ?Offre :offreDescription ?offreDescription .\n" +
-                "    ?Offre :user ?user_id .\n" +
-                "    ?user_id a :User .\n" +
-                "    ?user_id :username ?username .\n" +
-                "}";
+                " ?Offre :ajouterOffre ?user_id . ?user_id a :User . ?user_id :username ?username ." +
+                " ?Offre :postuler ?condidature_id . ?condidature_id a :Candidature . ?condidature_id :firstName ?firstName" +
+        "}";
 
 
         String serviceEndpoint = "http://localhost:3030/ds/sparql";
@@ -47,18 +46,22 @@ public class OffreController {
 
             while (results.hasNext()) {
                 QuerySolution solution = results.next();
-                RDFNode offre = solution.get("offre");
+                RDFNode offre = solution.get("Offre");
                 RDFNode offreId = solution.get("offreId");
                 RDFNode offreDescription = solution.get("offreDescription");
                 RDFNode offreTitle = solution.get("offreTitle");
+                RDFNode username = solution.get("username");
+                RDFNode firstName = solution.get("firstName");
 
 
 
                 Map<String, Object> resultItem = new HashMap<>();
-                resultItem.put("offre", offre.toString());
+                resultItem.put("Offre", offre.toString());
                 resultItem.put("offreId", offreId.toString());
                 resultItem.put("offreDescription", offreDescription.toString());
                 resultItem.put("offreTitle", offreTitle.toString());
+                resultItem.put("username", username.toString());
+                resultItem.put("firstName", firstName.toString());
                 queryResults.add(resultItem);
             }
 
