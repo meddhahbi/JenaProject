@@ -16,19 +16,19 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/skills")
+@RequestMapping("/offres")
 @CrossOrigin("*")
-public class SkillController {
+public class OffreController {
     @GetMapping
     public ResponseEntity<Object> performQuery() {
         String queryString = " PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n" +
-                " SELECT ?skill ?skillName ?skillDescription\n" +
+                " SELECT ?offre ?offreTitle ?offreDescription\n" +
                 "WHERE {\n" +
-                "   ?Skill a :skill .\n" +
-                "   ?Skill :skillId ?skillId .\n" +
-                "  ?Skill :skillName ?skillName .\n" +
-                "  ?Skill :skillDescription ?skillDescription .\n" +
-                "    ?Skill :rate ?user_id .\n" +
+                "   ?Offre a :offre .\n" +
+                "   ?Offre :offreId ?offreId .\n" +
+                "  ?Offre :offreTitle ?offreTitle .\n" +
+                "  ?Offre :offreDescription ?offreDescription .\n" +
+                "    ?Offre :user ?user_id .\n" +
                 "    ?user_id a :User .\n" +
                 "    ?user_id :username ?username .\n" +
                 "}";
@@ -47,18 +47,18 @@ public class SkillController {
 
             while (results.hasNext()) {
                 QuerySolution solution = results.next();
-                RDFNode skill = solution.get("skill");
-                RDFNode skillId = solution.get("skillId");
-                RDFNode skillDescription = solution.get("skillDescription");
-                RDFNode skillName = solution.get("skillName");
+                RDFNode offre = solution.get("offre");
+                RDFNode offreId = solution.get("offreId");
+                RDFNode offreDescription = solution.get("offreDescription");
+                RDFNode offreTitle = solution.get("offreTitle");
 
 
 
                 Map<String, Object> resultItem = new HashMap<>();
-                resultItem.put("skill", skill.toString());
-                resultItem.put("skillId", skillId.toString());
-                resultItem.put("skillDescription", skillDescription.toString());
-                resultItem.put("skillName", skillName.toString());
+                resultItem.put("offre", offre.toString());
+                resultItem.put("offreId", offreId.toString());
+                resultItem.put("offreDescription", offreDescription.toString());
+                resultItem.put("offreTitle", offreTitle.toString());
                 queryResults.add(resultItem);
             }
 
