@@ -4,10 +4,7 @@ import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.RDFNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,29 +17,30 @@ import java.util.Map;
 public class CondidatureController {
 
     @GetMapping
-    public ResponseEntity<Object> performQuery() {
-
-
-
-        String queryString = " PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n" +
-                " SELECT  ?condidatureId ?email ?lastName ?firstName ?lettre\n" +
+    public ResponseEntity<Object> performSearch(@RequestParam("searchTerm") String searchTerm) {
+        String queryString = "PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n" +
+                "SELECT ?condidatureId ?email ?lastName ?firstName ?lettre ?offre_id ?offreDescription\n" +
                 "WHERE {\n" +
                 "   ?Condidature :condidatureId ?condidatureId .\n" +
                 "   ?Condidature :email ?email .\n" +
-                "  ?Condidature :lastName ?lastName .\n" +
+                "   ?Condidature :lastName ?lastName .\n" +
                 "   ?Condidature :firstName ?firstName .\n" +
                 "   ?Condidature :lettre ?lettre .\n" +
+                "   ?Condidature :postuler ?offre_id .\n" +
+                "   ?offre_id a :Offre .\n" +
+                "   ?offre_id :offreDescription ?offreDescription .\n" +
+                "   FILTER (regex(str(?email), '" + searchTerm + "', 'i') || " +
+                "          regex(str(?lastName), '" + searchTerm + "', 'i') || " +
+                "          regex(str(?firstName), '" + searchTerm + "', 'i') || " +
+                "          regex(str(?lettre), '" + searchTerm + "', 'i') || " +
+                "          regex(str(?offreDescription), '" + searchTerm + "', 'i')) .\n" +
                 "}";
 
-
         String serviceEndpoint = "http://localhost:3030/test/sparql";
-
         Query query = QueryFactory.create(queryString);
 
         try (QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceEndpoint, query)) {
             ResultSet results = qexec.execSelect();
-
-
 
             List<Object> queryResults = new ArrayList<>();
 
@@ -53,9 +51,8 @@ public class CondidatureController {
                 RDFNode lastName = solution.get("lastName");
                 RDFNode firstName = solution.get("firstName");
                 RDFNode lettre = solution.get("lettre");
-
-
-
+                RDFNode offre_id = solution.get("offre_id");
+                RDFNode offreDescription = solution.get("offreDescription");
 
                 Map<String, Object> resultItem = new HashMap<>();
                 resultItem.put("condidatureId", condidatureId.toString());
@@ -63,13 +60,14 @@ public class CondidatureController {
                 resultItem.put("lastName", lastName.toString());
                 resultItem.put("firstName", firstName.toString());
                 resultItem.put("lettre", lettre.toString());
+                resultItem.put("offre_id", offre_id.toString());
+                resultItem.put("offreDescription", offreDescription.toString());
                 queryResults.add(resultItem);
             }
 
             return new ResponseEntity<>(queryResults, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-
             return new ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
