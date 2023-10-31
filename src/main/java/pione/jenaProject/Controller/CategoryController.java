@@ -20,26 +20,26 @@ import java.util.Map;
 @CrossOrigin("*")
 public class CategoryController {
 
-    @GetMapping
-    public ResponseEntity<Object> performQuery() {
+        @GetMapping
+        public ResponseEntity<Object> performQuery() {
 
 
 
-        String queryString = " PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n" +
-                " SELECT ?category ?categoryId ?categoryDescription ?categoryName\n" +
-                "WHERE {\n" +
-                "   ?category a :Category .\n" +
-                "   ?category :categoryId ?categoryId .\n" +
-                "  ?category :categoryDescription ?categoryDescription .\n" +
-                "   ?category :categoryName ?categoryName .\n" +
-                "}";
+            String queryString = " PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n" +
+                    " SELECT ?category ?categoryId ?categoryDescription ?categoryName\n" +
+                    "WHERE {\n" +
+                    "   ?category a :Category .\n" +
+                    "   ?category :categoryId ?categoryId .\n" +
+                    "  ?category :categoryDescription ?categoryDescription .\n" +
+                    "   ?category :categoryName ?categoryName .\n" +
+                    "}";
 
 
-        String serviceEndpoint = "http://localhost:3030/ds/sparql";
+            String serviceEndpoint = "http://localhost:3030/ds/sparql";
 
-        Query query = QueryFactory.create(queryString);
+            Query query = QueryFactory.create(queryString);
 
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceEndpoint, query)) {
+            try (QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceEndpoint, query)) {
             ResultSet results = qexec.execSelect();
 
 
