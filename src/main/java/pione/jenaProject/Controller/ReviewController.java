@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/gigs")
+@RequestMapping("/reviews")
 @CrossOrigin("*")
 public class ReviewController {
 
@@ -24,7 +24,7 @@ public class ReviewController {
     public ResponseEntity<Object> performQuery() {
 
         String queryString = " PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n" +
-                "  SELECT ?Review ?ratingId ?ratingComment ?user_id ?username ?category_id ?categoryName" +
+                "  SELECT ?Review ?ratingId ?ratingComment ?user_id ?username ?gig_id ?gigTitle" +
                 "  WHERE {\n" +
                 "    ?Review a :Review .\n" +
                 "    ?Review :ratingId ?ratingId .\n" +
@@ -32,7 +32,7 @@ public class ReviewController {
                 "    ?Review :rate ?user_id .\n" +
                 "    ?user_id a :User .\n" +
                 "    ?user_id :username ?username .\n" +
-                "    ?Review :evaluer ?gig_id .\n" +
+                "    ?Gig :evaluer ?gig_id .\n" +
                 "    ?gig_id a :Gig .\n" +
                 "    ?gig_id :gigTitle ?gigTitle .\n" +
                 "}";
