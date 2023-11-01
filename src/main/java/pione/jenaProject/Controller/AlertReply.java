@@ -22,16 +22,22 @@ public class AlertReply {
 
 
         String queryString = " PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n" +
-                " SELECT ?reply ?replyId ?replyDescription ?replyAlertId\n" +
+                " SELECT ?reply ?replyId ?ReplyDescription ?alertTitle ?replyAlertId  \n" +
                 "WHERE {\n" +
                 "   ?reply a :Reply .\n" +
                 "   ?reply :replyId ?replyId .\n" +
-                "  ?reply :replyDescription ?replyDescription .\n" +
-                "   ?reply :replyAlertId ?replyAlertId .\n" +
+                "  ?reply :ReplyDescription ?ReplyDescription .\n" +
+                "    ?reply :traiter ?replyAlertId .\n" +
+                "    ?replyAlertId a :Alert .\n" +
+                "    ?replyAlertId :alertTitle ?alertTitle .\n" +
+
+
                 "}";
 
 
-        String serviceEndpoint = "http://localhost:3030/mootez/sparql";
+
+
+        String serviceEndpoint = "http://localhost:3030/ds/sparql";
 
         Query query = QueryFactory.create(queryString);
 
@@ -46,8 +52,10 @@ public class AlertReply {
                 QuerySolution solution = results.next();
                 RDFNode reply = solution.get("reply");
                 RDFNode replyId = solution.get("replyId");
-                RDFNode replyDescription = solution.get("replyDescription");
-                RDFNode alertReplyId = solution.get("replyAlertId");
+                RDFNode ReplyDescription = solution.get("ReplyDescription");
+
+                RDFNode alertTitle = solution.get("alertTitle");
+
 
 
 
@@ -55,8 +63,9 @@ public class AlertReply {
                 Map<String, Object> resultItem = new HashMap<>();
                 resultItem.put("reply", reply.toString());
                 resultItem.put("replyId", replyId.toString());
-                resultItem.put("replyDescription", replyDescription.toString());
-                resultItem.put("replyAlertId", alertReplyId.toString());
+                resultItem.put("ReplyDescription", ReplyDescription.toString());
+
+                resultItem.put("alertTitle", alertTitle.toString());
                 queryResults.add(resultItem);
             }
 

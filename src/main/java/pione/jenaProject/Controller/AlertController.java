@@ -24,16 +24,21 @@ public class AlertController {
 
 
         String queryString = " PREFIX : <http://www.semanticweb.org/wassim/ontologies/2023/9/untitled-ontology-8#>\n" +
-                " SELECT ?alert ?alertId ?alertDescription ?alertTitle\n" +
+                " SELECT ?alert ?alertId ?alertDescription ?alertTitle ?user_id ?username \n" +
                 "WHERE {\n" +
                 "   ?alert a :Alert .\n" +
                 "   ?alert :alertId ?alertId .\n" +
-                "  ?alert :alertDescription ?alertDescription .\n" +
+                "   ?alert :alertDescription ?alertDescription .\n" +
                 "   ?alert :alertTitle ?alertTitle .\n" +
+                "   ?alert :reporter ?user_id .\n" +
+                "   ?user_id a :User .\n" +
+                "   ?user_id :username ?username .\n" +
                 "}";
 
 
-        String serviceEndpoint = "http://localhost:3030/mootez/sparql";
+
+
+        String serviceEndpoint = "http://localhost:3030/ds/sparql";
 
         Query query = QueryFactory.create(queryString);
 
@@ -50,6 +55,7 @@ public class AlertController {
                 RDFNode alertId = solution.get("alertId");
                 RDFNode alertDescription = solution.get("alertDescription");
                 RDFNode alertTitle = solution.get("alertTitle");
+                RDFNode username = solution.get("username");
 
 
 
@@ -59,6 +65,8 @@ public class AlertController {
                 resultItem.put("alertId", alertId.toString());
                 resultItem.put("alertDescription", alertDescription.toString());
                 resultItem.put("alertTitle", alertTitle.toString());
+                resultItem.put("username", username.toString());
+
                 queryResults.add(resultItem);
             }
 
